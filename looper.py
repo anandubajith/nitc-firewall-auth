@@ -3,6 +3,10 @@ import sys
 import requests
 import os
 
+if auth.checkConnection() is 1:
+    print("Internet access present\nNo Authentication required!")
+    exit()
+
 with open("dict.txt") as fin:
     for line in fin:
         dictionary = fin.read().splitlines()

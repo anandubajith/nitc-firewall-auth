@@ -3,6 +3,26 @@ import re
 import sys
 import time
 
+
+
+def checkConnection():
+    #print("Getting Authentication portal .....")
+    try:
+        getAuthPage = requests.get('http://detectportal.firefox.com/success.txt')
+    except requests.exceptions.Timeout:
+        print("Connection timout .........")
+        exit()
+    except requests.exceptions.TooManyRedirects:
+        print("Too many redirects .........")
+        exit()
+    except requests.exceptions.RequestException as e:
+        print(e)
+        exit()
+    if(getAuthPage.text == 'success\n'):
+        return 1
+    else:
+        return  -1
+
 class firewallAuth:
 
     def __init__(self):
