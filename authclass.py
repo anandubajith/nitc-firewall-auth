@@ -99,16 +99,24 @@ class firewallAuth:
         if(match is not None and match.group(1) is not None):
             self.keepAliveUrl = match.group(1)
             urlPattern = "http://(.*)/keepalive(.*)"
-            successFlag = re.match(urlPattern,self.keepAliveUrl)
+            if re.match(urlPattern,self.keepAliveUrl):
+                successFlag = 1
+            else:
+                successFlag = -1
+        elif "concurrent authentication is over limit" in responseCode:
+            successFlag = 2
         else:
-            successFlag = False;
+            successFlag = -1;
 
-        if(successFlag):
+        if(successFlag == 1):
             self.logoutUrl = self.authUrl + '/logout' + re.search(urlPattern,self.keepAliveUrl).group(2)
             print("Successfully authenticated!!")
             print("Keepalive URL: " + self.keepAliveUrl)
             print("Logout URL : " + self.logoutUrl)
             return 1
+        elif(successFlag == 2):
+            #print("Concurrent authentication")
+            return 2
         else:
             #print("Authentication failed!")
             return -1
@@ -143,11 +151,3 @@ class firewallAuth:
             except requests.exceptions.RequestException as e:
                 print(e)
             exit()
-
-if __name__ == "__main__":
-    name = "B150115CS"
-    passwd = "abcd1234"
-    obj = firewallAuth()
-    success = obj.authenticate(name,passwd)
-    if(success is 1):
-        obj.keepalive()
