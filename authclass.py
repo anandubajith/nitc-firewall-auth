@@ -142,12 +142,15 @@ class firewallAuth:
 
         except KeyboardInterrupt:
             print("\nLogging Out")
-            try:
-                logoutResponse = requests.get(self.logoutUrl)
-            except requests.exceptions.Timeout:
-                print("Connection timout .........")
-            except requests.exceptions.TooManyRedirects:
-                print("Too many redirects .........")
-            except requests.exceptions.RequestException as e:
-                print(e)
+            self.logout()
             exit()
+
+    def logout(self):
+        try:
+            logoutResponse = requests.get(self.logoutUrl)
+        except requests.exceptions.Timeout:
+            print("Connection timout .........")
+        except requests.exceptions.TooManyRedirects:
+            print("Too many redirects .........")
+        except requests.exceptions.RequestException as e:
+            print(e)
